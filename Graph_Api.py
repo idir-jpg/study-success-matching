@@ -35,7 +35,7 @@ def get_access_token():
         print(f"Erreur lors de l'acquisition du token: {e}")
         return None
 
-def download_sharepoint_file(file_path: str) -> str:
+def download_sharepoint_file(file_path: str, suffix: str = ".xlsx") -> str:
     """Télécharge un fichier depuis SharePoint"""
     try:
         token = get_access_token()
@@ -50,7 +50,7 @@ def download_sharepoint_file(file_path: str) -> str:
         
         if response.status_code == 200:
             # Crée un fichier temporaire
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
                 tmp.write(response.content)
                 return tmp.name
         else:
@@ -60,3 +60,8 @@ def download_sharepoint_file(file_path: str) -> str:
     except Exception as e:
         print(f"Erreur: {e}")
         return None
+
+# Alias pour compatibilité
+def download_file(file_path: str, suffix: str = ".xlsx") -> str:
+    """Alias pour download_sharepoint_file"""
+    return download_sharepoint_file(file_path, suffix)
